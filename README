@@ -1,0 +1,11 @@
+
+	F90-Wrappers
+
+	Various codes/examples to call F90 routines from other languages, 
+	mostly Python, but C support kind of "drops out" when you write the
+	wrapper code with Cython
+
+		--f2py for python-->f90 and access to the source code
+
+		--Cython for python-->f90 when no access to source code
+
