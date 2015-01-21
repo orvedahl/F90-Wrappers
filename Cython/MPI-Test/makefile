@@ -32,7 +32,8 @@ ifdef omp
 endif
 
 # order matters
-objects = original.f90 wrapper.f90
+objects = const_orig.f90 dot_prod_orig.f90 vectors_orig.f90 wrapper.f90
+mods = constants.mod dot_prod_mod.mod vector_ops_wrap_mod.mod vector_ops.mod
 
 all: cython
 
@@ -50,7 +51,7 @@ cython: $(objects:.f90=.o)
 #$(f90_comp) $(flags) -c $< -o $@
 
 clean:
-	-rm -f calc_vector_norm.mod vector_norm_wrap_mod.mod
+	-rm -f $(mods)
 	-rm -f $(objects:.f90=.o)
 	-rm -f $(objects:.f90=.mod)
 

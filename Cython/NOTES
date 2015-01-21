@@ -1,0 +1,6 @@
+
+	--define/convert arrays in python by:
+		x = numpy.array(x, order='F')
+
+		this avoids the need to transpose stuff for the 
+		row-major / column-major junk
