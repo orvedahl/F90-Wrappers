@@ -1,0 +1,12 @@
+BL_TYPES_INFO
+  Real Types
+    NAME   KIND RANGE PRECISION  DIGITS
+    DP_T =    8   307        15      53
+    SP_T =    4    37         6      24
+  QP_T_0 = Not Defined: see bl_types.f90 for possible adjustments
+  QP_T   =    8   307        15      53
+  Integer Types
+    NAME   KIND RANGE  DIGITS
+    i4_T =    4     9      31
+    i8_T =    8
+    LL_T =    8    18      63
