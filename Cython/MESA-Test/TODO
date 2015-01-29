@@ -1,0 +1,208 @@
+
+
+	Design Ideas
+
+		call eos(input_type, eos_object, debug)
+
+                input_type	input variables
+			1	rho, T		density/temperature
+			2	rho, h		density/enthalpy
+			3	T,   p		temperature/pressure
+			4	rho, p		density/pressure
+			5	rho, e		density/internal energy
+			6	p,   s		pressure/entropy
+
+		eos_object:
+			integer nspec		# species
+			double  rho		# density
+			double  T		# temperature
+			double  xmass(nspec)	# mass fractions
+			double  p		# total pressure
+			double  h		# enthalpy/gram
+			double  e		# internal E/gram
+			double  cv		# specific heat const Vol
+			double  cp		# specific heat const Press
+			double  xne		# number dens of elec/positron
+			double  eta		# degeneracy parameter
+			double  pele		# elec+positron pressure
+			double  dpdT		# d pres / d temperature
+			double  dpdr		# d pres / d density
+			double  dedT		# d energy / d temperature
+			double  dedr		# d energy / d density
+			double  dpdX(nspec)	# d pres / d xmass
+			double  dhdX(nspec)	# d enthalpy / d xmass
+			double  gam1		# d logP / d logRho |_s
+			double  cs		# sound speed
+			double  s		# entropy/gram
+			double  dsdT		# d entropy / d temperature
+			double  dsdr		# d entropy / d density
+
+
+
+	input	input		mesa_routine_to_call
+	1	dens, T		eosDT_get(...)
+	2	dens, h		eosDT_get_T(...) which_other = i_enthalpy?
+	3	T, p		eosPT_get(...)
+	4	dens, log(Pgas)	eosDT_get_T(...) which_other = i_lnPgas
+	5	dens, log(e)	eosDT_get_T(...) which_other = i_lnE
+	6	p, log(s)	eosPT_get_T(...) which_other = i_lnS
+
+
+	eosDT_get():
+		input:
+			handle (int)
+			Z (metals mass frac)
+			X (H mass frac)
+			abar (mean atomic number)
+			zbar (mean atomic charge)
+			species (int) (=nspec)
+			chem_id(:) (int) (index 1 to nspec)
+			net_iso(:) (int) (index 1 to num_chem_isos)
+			xn(:) (mass fractions)
+			rho
+			log10Rho
+			T
+			log10T
+
+		returns: only basic results
+			res(:) (size num_eos_basic_results)
+			d_dlnRho_const_T(:) (num_eos_basic_results)
+			d_dlnT_const_Rho(:) (num_eos_basic_results)
+			ierr
+
+	eosDT_get_T():
+		input:
+			handle (int)
+			Z (metals mass frac)
+			X (H mass frac)
+			abar (mean atomic number)
+			zbar (mean atomic charge)
+			species (int) (=nspec)
+			chem_id(:) (int) (index 1 to nspec)
+			net_iso(:) (int) (index 1 to num_chem_isos)
+			xn(:) (mass fractions)
+			logrho
+			which_other (from eos_def e.g. i_lnE)
+			other_value
+			other_tol
+			logT_tol
+			max_iter
+			logT_guess
+			logT_bnd1 (bounds for logT)
+			logT_bnd2 (if dont know bounds, send arg_not_provided)
+			other_at_bnd1 (value at bounds)
+			other_at_bnd2 (if dont know, send arg_not_provided)
+			
+		returns:
+			logT_result
+			res(:) (size of num_eos_basic_results)
+			d_dlnRho_const_T(:) (num_eos_basic_results)
+			d_dlnT_const_Rho(:) (num_eos_basic_results)
+			helm_results(:) (size of num_helm_results)
+			eos_calls
+			ierr
+
+	eosPT_get():
+		input:
+			handle (int)
+			Z (metals mass frac)
+			X (H mass frac)
+			abar (mean atomic number)
+			zbar (mean atomic charge)
+			species (int) (=nspec)
+			chem_id(:) (int) (index 1 to nspec)
+			net_iso(:) (int) (index 1 to num_chem_isos)
+			xn(:) (mass fractions)
+			Pgas
+			log10Pgas
+			T
+			log10T
+
+		returns: only basic results
+			Rho
+			log10Rho
+			dlnRho_dlnPgas_const_T
+			dlnRho_dlnT_const_Pgas
+			res(:) (size num_eos_basic_results)
+			d_dlnRho_const_T(:) (num_eos_basic_results)
+			d_dlnT_const_Rho(:) (num_eos_basic_results)
+			ierr
+
+	eosPT_get_T():
+		input:
+			handle (int)
+			Z (metals mass frac)
+			X (H mass frac)
+			abar (mean atomic number)
+			zbar (mean atomic charge)
+			species (int) (=nspec)
+			chem_id(:) (int) (index 1 to nspec)
+			net_iso(:) (int) (index 1 to num_chem_isos)
+			xn(:) (mass fractions)
+			logPgas
+			which_other (from eos_def e.g. i_lnE)
+			other_value
+			other_tol
+			logT_tol
+			max_iter
+			logT_guess
+			logT_bnd1 (bounds for logT)
+			logT_bnd2 (if dont know bounds, send arg_not_provided)
+			other_at_bnd1 (value at bounds)
+			other_at_bnd2 (if dont know, send arg_not_provided)
+			
+		returns:
+			logT_result
+			Rho, log10Rho
+			dlnRho_dlnPgas_const_T
+			dlnRho_dlnT_const_Pgas
+			res(:) (size of num_eos_basic_results)
+			d_dlnRho_const_T(:) (num_eos_basic_results)
+			d_dlnT_const_Rho(:) (num_eos_basic_results)
+			helm_results(:) (size of num_helm_results)
+			eos_calls
+			ierr
+
+        ! directly call the helm_results
+	eos_get_helm_results():
+		input:
+			handle (int)
+			Z (metals mass frac)
+			X (H mass frac)
+			abar (mean atomic number)
+			zbar (mean atomic charge)
+			Rho
+			log10Rho
+			T
+			log10T
+
+		returns: returns helm results (much more then basic)
+			res(:) (size num_helm_results)
+			ierr
+
+	! given the helm_results, what are the basic results
+	eos_convert_helm_results():
+		input:
+			helm_res(:) (size of num_helm_results)
+			handle (int)
+			Z (metals mass frac)
+			X (H mass frac)
+			abar (mean atomic number)
+			zbar (mean atomic charge)
+			Rho
+			T
+			basic_flag (set to .true. if want basic results)
+
+		returns:
+			res(:) (size of num_eos_basic_results)
+			d_dlnRho_const_T(:) (num_eos_basic_results)
+			d_dlnT_const_Rho(:) (num_eos_basic_results)
+			ierr
+
+	! useful because Pgas = Ptot - Prad
+	Radiation_Pressure():
+		input:
+			T
+
+		returns:
+			radiation_pressure

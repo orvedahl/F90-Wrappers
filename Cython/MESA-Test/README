@@ -1,0 +1,32 @@
+
+	MESA Wrappers
+
+
+	Files needed:
+
+		-main python code / main interface
+
+		-cython code to define f90 interfaces
+
+		-wrapper to f90 code using iso_c_binding stuff
+
+		-original f90 code that will be called by wrapper
+
+	How to compile:
+
+		-compile all f90 source with "-fPIC" flag
+
+		-compile cython stuff:
+			python setup.py build_ext --inplace
+
+	MAIN IDEA
+
+		-these need to be callable from python:
+			setup routines --> setup_mesa_eos.f90
+
+			finalize routines --> shutdown_mesa_eos.f90
+
+			actual call to eos --> MESA_eos_from_MAESTRO.f90
+
+		-eos_stuff.f90 & eos_utils.f90 can stand alone as F90 code
+
