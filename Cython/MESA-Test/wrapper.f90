@@ -30,39 +30,17 @@ contains
 
 
    ! call the EOS
-   subroutine call_MESA_eos(nspec, &
-                            x_in, den_row, temp_row, abar_row, zbar_row, &
-                            etot_row, ptot_row, &
-                            cv_row, cp_row, xne_row, xnp_row, etaele_row, &
-                            pele_row, ppos_row, &
-                            dpd_row, dpt_row, dpa_row, dpz_row, &
-                            ded_row, det_row, dea_row, dez_row, &
-                            gam1_row, cs_row, stot_row, &
-                            dsd_row, dst_row, eosfail) bind(c)
+   subroutine call_MESA_EOS(n_vars, eos_input, eos_vars, debug, eosfail) bind(c)
 
       ! input
-      integer(kind=c_int), intent(in) :: nspec
-      real(kind=c_double), intent(in) :: x_in(nspec)  ! xmass used to find Z
-      real(kind=c_double), intent(in) :: den_row, temp_row, abar_row, zbar_row
+      integer(kind=c_int), intent(in) :: n_vars, debug, eos_input
+      real(kind=c_double), intent(inout) :: eos_vars(n_vars) ! state variables
 
       ! output
-      real(kind=c_double), intent(out) :: etot_row, ptot_row, cv_row, cp_row, &
-                                 xne_row, xnp_row, etaele_row, &
-                                 pele_row, ppos_row, dpd_row, dpt_row, &
-                                 dpa_row, dpz_row, ded_row, det_row, &
-                                 dea_row, dez_row, gam1_row, cs_row, &
-                                 stot_row, dsd_row, dst_row
-      logical(kind=c_bool), intent(out) :: eosfail
+      integer(kind=c_int), intent(out) :: eosfail
 
-      call MESA_eos_from_MAESTRO( &
-                       x_in, den_row, temp_row, abar_row, zbar_row, &
-                       etot_row, ptot_row, &
-                       cv_row, cp_row, xne_row, xnp_row, etaele_row, &
-                       pele_row, ppos_row, &
-                       dpd_row, dpt_row, dpa_row, dpz_row, &
-                       ded_row, det_row, dea_row, dez_row, &
-                       gam1_row, cs_row, stot_row, &
-                       dsd_row, dst_row, eosfail)
+      call MESA_EOS(n_vars, eos_input, eos_vars, debug, eosfail)
+
       return
 
    end subroutine call_MESA_eos

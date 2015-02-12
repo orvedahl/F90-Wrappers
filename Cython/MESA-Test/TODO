@@ -39,13 +39,15 @@
 
 
 
+	BASED ON MESA-7385:
+
 	input	input		mesa_routine_to_call
-	1	dens, T		eosDT_get(...)
-	2	dens, h		eosDT_get_T(...) which_other = i_enthalpy?
-	3	T, p		eosPT_get(...)
-	4	dens, log(Pgas)	eosDT_get_T(...) which_other = i_lnPgas
-	5	dens, log(e)	eosDT_get_T(...) which_other = i_lnE
-	6	p, log(s)	eosPT_get_T(...) which_other = i_lnS
+	*1	dens, T		eosDT_get(...)
+	*3	T, ptot		eosPT_get(...) but pass pgas = ptot-prad(T)
+	*5	dens, e		eosDE_get(...)
+	 4	dens, pgas	eosDT_get_T(...) which_other = i_lnPgas
+	 6	pgas, log(s)	eosPT_get_T(...) which_other = i_lnS
+	 2	dens, h		not easily done?
 
 
 	eosDT_get():

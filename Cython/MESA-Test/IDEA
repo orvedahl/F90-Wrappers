@@ -1,0 +1,10 @@
+
+	--pure f90 routines to call MESA EOS --> will depend on MESA modules
+
+	--wrapper f90 routine to call pure f90 codes (uses bind(c) stuff)
+
+	--cython code to wrap the f90 wrapper code
+		this will also define what the interface looks like
+		according to python routines
+
+	--python test code
