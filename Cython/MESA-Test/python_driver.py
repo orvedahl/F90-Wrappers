@@ -7,16 +7,30 @@
 import numpy
 import cython_wrapper as wrapper
 
-# setup values
+# domain setup
+dens_max = 1.e9
+dens_min = 1.e6
+temp_max = 1.e9
+temp_min = 1.e6
+metal_max = 0.1
 
-# initialize EOS (i.e. call Fortran)
+# setup values
+ih1 = 0            # index of hydrogen-1
+ihe4 = 1           # index of helium-4
+nspec = 10
+
+xmass = numpy.empty((nspec))
+for i in range ():
+    xmass[i] = float(i)*metal_max/float(num_metals)
 
 # convert to F-contiguous arrays
-A = numpy.array(A, order='F')
-B = numpy.array(B, order='F')
+xmass = numpy.array(xmass, order='F')
+
+# initialize EOS (i.e. call Fortran)
+wrapper.init_EOS()
 
 # call Fortran EOS
-dot, cross = wrapper.vector_ops_f90(n, A, B)
+dot, cross = wrapper.eos(n, A, B)
 
 print "\nFortran Results:"
 print "\tdot prod  :", dot
