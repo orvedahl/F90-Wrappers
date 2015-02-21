@@ -16,14 +16,33 @@ cdef extern:
 
     void finalize_MESA_eos()
 
+##########################################################################
+# Network routines
+##########################################################################
+# initialize the network
+def setup_MESA_net():
+    initialize_MESA_net()
+
+# finalize the network
+def shutdown_MESA_net():
+    finalize_MESA_net()
+
+# define the python "front end" to the external code
+def network():
+    pass
+    return
+
+##########################################################################
+# EOS routines
+##########################################################################
 # initialize the EOS
 def setup_MESA_eos():
     initialize_MESA_eos()
-    
+
 # finalize the EOS
 def shutdown_MESA_eos():
     finalize_MESA_eos()
-    
+
 # define the python "front end" to the external code
 def eos(int eos_input, numpy.ndarray[numpy.float64_t, ndim=1] eos_vars,
         int debug):

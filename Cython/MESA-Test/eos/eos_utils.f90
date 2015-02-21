@@ -12,7 +12,6 @@ module eos_utils
    ! values that are passed between multiple routines
    integer, save :: handle_eos
    integer, save :: ih1_, ihe4_
-   character(len=256), save :: data_dir
 
    ! indices for accessing the state variables
 
