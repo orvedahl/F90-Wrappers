@@ -40,7 +40,7 @@ all: cython
 
 cython: $(objects:.f90=.o)
 	@echo
-	python setup.py build_ext --inplace
+	python3 setup.py build_ext --inplace
 	@echo
 	@echo "---Success---"
 	@echo

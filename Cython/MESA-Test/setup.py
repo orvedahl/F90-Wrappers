@@ -33,9 +33,9 @@ include_dirs = [npy_include_dir, mesa_inc]
 # list the object files: wrapper.o holds the wrapping code which depends on
 # original.o code...note this is the filename, not the module name
 objects = ["data_types.o", "errors.o", "mesa_utils.o", "eos/eos_utils.o",
-           "eos/setup_mesa_eos.o", "eos/shutdown_mesa_eos.o",
-           "network/net_utils.o", "eos/MESA_EOS.o", "network/setup_mesa_net.o",
-           "network/shutdown_mesa_net.o", "network/call_mesa_net.o"]
+        "eos/setup_mesa_eos.o", "eos/shutdown_mesa_eos.o",
+        "network/net_utils.o", "eos/MESA_EOS.o", "network/setup_mesa_net.o",
+        "network/shutdown_mesa_net.o", "network/call_mesa_net.o", "wrapper.o"]
 
 ext_modules = [Extension(pyx_name, [pyx_file],
                          include_dirs=include_dirs,
