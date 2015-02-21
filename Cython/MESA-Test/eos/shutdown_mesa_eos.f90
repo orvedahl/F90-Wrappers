@@ -14,7 +14,7 @@ subroutine shutdown_mesa_eos()
 
    call free_eos_handle(handle_eos)
 
-   call eos_shutdown
+   call eos_shutdown()
 
 end subroutine shutdown_mesa_eos
 

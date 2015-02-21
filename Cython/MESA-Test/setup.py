@@ -23,17 +23,19 @@ pyx_file = "cython_def.pyx"
 pyx_name = "cython_wrapper"
 
 # order of libraries follows from MAESTRO build system of MESA EOS
-libraries = ['gfortran', 'eos', 'chem', 'interp_2d', 'interp_1d', 'num',
-             'utils', 'alert', 'const', 'mtx', 'mesaklu', 'mesalapack',
-             'mesablas']
+#libraries = ['net', 'eos', 'rates', 'chem', 'interp_2d',
+libraries = ['gfortran', 'net', 'eos', 'rates', 'chem', 'interp_2d',
+             'interp_1d', 'num', 'crlibm', 'mtx', 'const', 'utils',
+             'mesaklu', 'mesalapack', 'mesablas']
 lib_dirs = [mesa_lib]
 include_dirs = [npy_include_dir, mesa_inc]
 
 # list the object files: wrapper.o holds the wrapping code which depends on
 # original.o code...note this is the filename, not the module name
-objects = ["setup_mesa_eos.o", "shutdown_mesa_eos.o",
-           "MESA_eos_from_MAESTRO.o", "eos_stuff.o", "eos_utils.o",
-           "wrapper.o"]
+objects = ["data_types.o", "errors.o", "mesa_utils.o", "eos/eos_utils.o",
+           "eos/setup_mesa_eos.o", "eos/shutdown_mesa_eos.o",
+           "network/net_utils.o", "eos/MESA_EOS.o", "network/setup_mesa_net.o",
+           "network/shutdown_mesa_net.o", "network/call_mesa_net.o"]
 
 ext_modules = [Extension(pyx_name, [pyx_file],
                          include_dirs=include_dirs,

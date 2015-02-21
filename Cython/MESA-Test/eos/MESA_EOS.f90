@@ -2,49 +2,57 @@
 ! routine to call MESA eos
 !
 
-subroutine MESA_EOS(n_vars, eos_input, eos_vars, debug, eosfail)
+subroutine MESA_EOS(n_vars, xmass, eos_input, eos_vars, debug, eosfail)
 
+   use data_types
    use eos_utils
+   use mesa_utils, only: nspec
+   use net_utils,  only: chem_id, net_iso
 
    ! MESA
-   use eos_lib, only: eosDT_get, eosPT_get, eosDE_get
+   use eos_lib,    only: eosDT_get, eosPT_get, eosDE_get
+   use chem_lib,   only: basic_composition_info
+   use eos_def,    only: num_eos_basic_results
 
    implicit none
 
    ! INPUT
    integer, intent(in) :: n_vars, eos_input, debug
-   double precision, intent(inout) :: eos_vars(n_vars)  ! state variables
+   real(kind=dp_t), intent(in) :: xmass(nspec)
+   real(kind=dp_t), intent(inout) :: eos_vars(n_vars)  ! state variables
 
    ! OUTPUT
    integer, intent(out) :: eosfail
 
    ! LOCAL
    integer :: ierr
+   real(kind=dp_t) :: xh, xhe, abar, zbar, z2bar, ye, mass_correction, sumx
+   real(kind=dp_t) :: rho, T, Z
+   real(kind=dp_t), dimension(num_eos_basic_results) :: results, &
+                             d_dlnRho_const_T, d_dlnT_const_Rho, &
+                             d_dabar_const_TRho, d_dzbar_const_TRho
 
    ierr = 0
-   eosfail = .false.
+   eosfail = 0
 
-   ! calculate abar/zbar
-   tnew = 0.0d0
-   dnew = 0.0d0
-   do i=1,nspec
-      ymass = xmass(i)/aion(i)
-      dnew  = dnew + ymass
-      tnew  = tnew + zion(i)*ymass
-   enddo
+   ! calculate abar/zbar, ye, etc.
+   call basic_composition_info(nspec, chem_id, xmass, &
+                               xh, xhe, abar, zbar, z2bar, ye, mass_correction, sumx)
 
-   abar = 1.0d0/dnew
-   zbar = tnew*abar
+   ! metalicity
+   Z = 1.0d0 - xh - xhe
 
    !-----------------------------------------------------------------
    ! inputs are density & temperature
    !-----------------------------------------------------------------
    if (eos_input == eos_input_rho_T) then
 
-      call eosDT_get(handle_eos, Z, X, abar, zbar, species, chem_id,
-                     net_iso, xmass, rho, log10rho, T, log10T, &
+      rho = eos_vars(i_rho)
+      T = eos_vars(i_T)
+      call eosDT_get(handle_eos, Z, xh, abar, zbar, nspec, chem_id, &
+                     net_iso, xmass, rho, log10(rho), T, log10(T), &
                      results, d_dlnRho_const_T, d_dlnT_const_Rho, &
-                     d_dabar_const_RRho, d_dzbar_const_TRho, ierr)
+                     d_dabar_const_TRho, d_dzbar_const_TRho, ierr)
 
    !-----------------------------------------------------------------
    ! inputs are total pressure & temperature
@@ -77,10 +85,13 @@ subroutine MESA_EOS(n_vars, eos_input, eos_vars, debug, eosfail)
    endif
 
    if (ierr /= 0) then
-      eosfail = .true.
+      eosfail = 1
       return
    endif
 
-end subroutine MESA_eos_from_MAESTRO
+   ! unpack the results
+   eos_vars(:) = results(:)
+
+end subroutine MESA_EOS
 
 
