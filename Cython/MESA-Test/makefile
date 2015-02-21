@@ -31,9 +31,10 @@ ifdef omp
     flags += -fopenmp
 endif
 
+flags += -L$(MESA_DIR)/lib -lnet -leos -lrates -lchem -linterp_2d -linterp_1d -lnum -lcrlibm -lmtx -lconst -lutils -lmesaklu -lmesalapack -lmesablas -I$(MESA_DIR)/include
+
 # order matters
-objects = const_orig.f90 dot_prod_orig.f90 vectors_orig.f90 wrapper.f90
-mods = constants.mod dot_prod_mod.mod vector_ops_wrap_mod.mod vector_ops.mod
+objects = data_types.f90 errors.f90 mesa_utils.f90 eos/eos_utils.f90 eos/setup_mesa_eos.f90 eos/shutdown_mesa_eos.f90 network/net_utils.f90 eos/MESA_EOS.f90 network/setup_mesa_net.f90 network/shutdown_mesa_net.f90 network/call_mesa_net.f90 wrapper.f90
 
 all: cython
 
@@ -51,12 +52,10 @@ cython: $(objects:.f90=.o)
 #$(f90_comp) $(flags) -c $< -o $@
 
 clean:
-	-rm -f $(mods)
-	-rm -f $(objects:.f90=.o)
-	-rm -f $(objects:.f90=.mod)
+	-rm -f ./*.o ./*.mod
+	-rm -f cython_def.c
 
 realclean: clean
 	-rm -f cython_wrapper.so
-	-rm -f cython_def.c
 	-rm -rf build
 

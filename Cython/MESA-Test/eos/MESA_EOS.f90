@@ -22,7 +22,7 @@ subroutine MESA_EOS(n_vars, xmass, eos_input, eos_vars, debug, eosfail)
    real(kind=dp_t), intent(inout) :: eos_vars(n_vars)  ! state variables
 
    ! OUTPUT
-   logical, intent(out) :: eosfail
+   integer, intent(out) :: eosfail
 
    ! LOCAL
    integer :: ierr
@@ -33,7 +33,7 @@ subroutine MESA_EOS(n_vars, xmass, eos_input, eos_vars, debug, eosfail)
                              d_dabar_const_TRho, d_dzbar_const_TRho
 
    ierr = 0
-   eosfail = .false.
+   eosfail = 0
 
    ! calculate abar/zbar, ye, etc.
    call basic_composition_info(nspec, chem_id, xmass, &
@@ -85,7 +85,7 @@ subroutine MESA_EOS(n_vars, xmass, eos_input, eos_vars, debug, eosfail)
    endif
 
    if (ierr /= 0) then
-      eosfail = .true.
+      eosfail = 1
       return
    endif
 

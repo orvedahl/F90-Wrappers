@@ -2,8 +2,8 @@
 ! routine to call the MESA net module
 !
 
-subroutine call_mesa_net(density, temperature, xmass, eps_nuc, dxdt, &
-                         use_degeneracy)
+subroutine call_mesa_net(density, temperature, xmass, use_degeneracy, &
+                         eps_nuc, dxdt)
 
    use data_types
    use net_utils,   only: handle_net, chem_id, num_reactions
@@ -22,7 +22,7 @@ subroutine call_mesa_net(density, temperature, xmass, eps_nuc, dxdt, &
    implicit none
 
    real(kind=dp_t), intent(in) :: density, temperature, xmass(nspec)
-   logical, intent(in) :: use_degeneracy
+   integer, intent(in) :: use_degeneracy
    real(kind=dp_t), intent(out) :: eps_nuc, dxdt(nspec)
 
    real(kind=dp_t) :: xh, xhe, abar, zbar, z2bar, ye, mass_correction, sumx
@@ -66,7 +66,7 @@ subroutine call_mesa_net(density, temperature, xmass, eps_nuc, dxdt, &
    ! call eos to get electron degeneracy (eta)
    ! this is only used for prot(e-nu)neut and neut(e+nu)prot
    ! if your network doesn't include those, you can safely ignore eta
-   if (.not. use_degeneracy) then
+   if (use_degeneracy == 0) then
       eta = 0.d0
       d_eta_dlnT = 0.d0
       d_eta_dlnRho = 0.d0

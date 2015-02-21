@@ -4,16 +4,11 @@
 
 subroutine setup_mesa_net()
 
-   ! network parameters
+   use errors
    use net_utils,   only: net_iso, chem_id, which_rates, handle_net, &
                       num_reactions, solver_choice, decsol_choice, species
-
-   ! mesa utils
    use mesa_utils,  only: nspec, mesa_dir, short_spec_names, short_spec_mesa, &
                      chem_initialized, const_initialized
-
-   ! error module
-   use errors
 
    ! MESA:
    use const_lib,   only: const_init
