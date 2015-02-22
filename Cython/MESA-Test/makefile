@@ -40,7 +40,8 @@ ifdef omp
     flags += -fopenmp
 endif
 
-flags += -L$(MESA_DIR)/lib -lnet -leos -lrates -lchem -linterp_2d -linterp_1d -lnum -lcrlibm -lmtx -lconst -lutils -lmesaklu -lmesalapack -lmesablas -I$(MESA_DIR)/include
+flags += -L$(MESA_DIR)/lib -lnet -leos -lrates -lchem -linterp_2d -linterp_1d -lnum -lcrlibm -lmtx -lconst -lutils -lmesalapack -lmesablas -I$(MESA_DIR)/include
+#flags += -L$(MESA_DIR)/lib -lnet -leos -lrates -lchem -linterp_2d -linterp_1d -lnum -lcrlibm -lmtx -lconst -lutils -lmesaklu -lmesalapack -lmesablas -I$(MESA_DIR)/include
 
 # order matters
 objects = data_types.f90 errors.f90 mesa_utils.f90 eos/eos_utils.f90 eos/setup_mesa_eos.f90 eos/shutdown_mesa_eos.f90 network/net_utils.f90 eos/MESA_EOS.f90 network/setup_mesa_net.f90 network/shutdown_mesa_net.f90 network/call_mesa_net.f90 wrapper.f90
