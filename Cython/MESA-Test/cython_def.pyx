@@ -40,6 +40,7 @@ def rhs_mesa_network(double rho, double T,
     cdef double eps_nuc
 
     nspec = len(xmass)
+    eps_nuc = 0.0
 
     # for proper memory management:
     #     declare output dxdt in python

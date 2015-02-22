@@ -5,6 +5,9 @@
 # Debugging flag
 debug :=
 
+# which python
+python3 := 
+
 # OpenMP/MPI flag
 omp :=
 mpi :=
@@ -14,6 +17,12 @@ verbose := t
 
 # Fortran compiler (choices are "gfortran" or "intel" so far)
 f90_comp := gfortran
+
+ifdef python3
+    what_python = python3
+else
+    what_python = python
+endif
 
 ifdef debug
     flags = ${my_gfortran_debug} -fPIC
@@ -40,7 +49,7 @@ all: cython
 
 cython: $(objects:.f90=.o)
 	@echo
-	python3 setup.py build_ext --inplace
+	$(what_python) setup.py build_ext --inplace
 	@echo
 	@echo "---Success---"
 	@echo

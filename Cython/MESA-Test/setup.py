@@ -7,6 +7,7 @@
 #
 # R. Orvedahl 1-20-2015
 
+from distutils import sysconfig
 from distutils.core import setup
 from distutils.extension import Extension
 from Cython.Distutils import build_ext
@@ -19,6 +20,8 @@ mesa_lib = mesa_dir + '/lib'       # library directory of MESA libs
 mesa_inc = mesa_dir + '/include'   # include directory of MESA include files
 
 npy_include_dir = numpy.get_include()
+python_inc = sysconfig.get_config_vars()['INCLUDEPY']
+
 pyx_file = "cython_def.pyx"
 pyx_name = "cython_wrapper"
 
@@ -28,7 +31,7 @@ libraries = ['gfortran', 'net', 'eos', 'rates', 'chem', 'interp_2d',
              'interp_1d', 'num', 'crlibm', 'mtx', 'const', 'utils',
              'mesaklu', 'mesalapack', 'mesablas']
 lib_dirs = [mesa_lib]
-include_dirs = [npy_include_dir, mesa_inc]
+include_dirs = [npy_include_dir, mesa_inc, python_inc]
 
 # list the object files: wrapper.o holds the wrapping code which depends on
 # original.o code...note this is the filename, not the module name
