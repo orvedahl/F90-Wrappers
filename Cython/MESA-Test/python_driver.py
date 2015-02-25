@@ -2,48 +2,62 @@
 #
 # call cython code from within python
 #
-# R. Orvedahl 1-20-2015
+# R. Orvedahl 2-25-2015
 
 import numpy
 import cython_wrapper as wrapper
+import eos_utils
 
-# domain setup
-dens_max = 1.e9
-dens_min = 1.e6
-temp_max = 1.e9
-temp_min = 1.e6
-metal_max = 0.1
+test_network = False
 
-# setup values
+# thermodynamics setup
+metalicity = 0.05
+nspec = 15         # number of species to carry in the network
+
+# setup indicies
 ih1 = 0            # index of hydrogen-1
 ihe4 = 1           # index of helium-4
-nspec = 10
 
+# set mass fractions
 xmass = numpy.empty((nspec))
-for i in range ():
-    xmass[i] = float(i)*metal_max/float(num_metals)
+xmass[:] = metalicity/float(nspec - 2) # all but H, He
+xmass[ih1] = 0.75 - 0.5*metalicity
+xmass[ihe4] = 0.25 - 0.5*metalicity
 
 # convert to F-contiguous arrays
 xmass = numpy.array(xmass, order='F')
 
-# initialize EOS (i.e. call Fortran)
-wrapper.init_EOS()
+# set density and temperature
+density = 1.e6
+temperature = 1.e6
+
+# initialize EOS/network (i.e. call Fortran)
+if (test_network):
+    wrapper.setup_MESA_net() # network uses EOS, so its initialized with net
+else:
+    wrapper.setup_MESA_eos()
+
+# setup an EOS state array
+eos_vars = numpy.zeros((eos_utils.num_eos_values))
+eos_vars[i_rho] = density
+eos_vars[i_T] = temperature
 
 # call Fortran EOS
-dot, cross = wrapper.eos(n, A, B)
+wrapper.eos(eos_utils.eos_input_rho_T, xmass, eos_vars, 0)
 
-print "\nFortran Results:"
-print "\tdot prod  :", dot
-print "\tcross prod:", cross
-print "\nPython Results:"
-print "\tdot prod  :", A[0]*B[0]+A[1]*B[1]+A[2]*B[2]
-C = []
-C.append(A[1]*B[2] - A[2]*B[1])
-C.append(A[2]*B[0] - A[0]*B[2])
-C.append(A[0]*B[1] - A[1]*B[0])
-print "\tcross prod:", C
-print
+print "\nResults:"
+print "\tinput:"
+print "\t\t rho : ",density
+print "\t\t  T  : ",temperature
+print "\t\txmass: ", xmass
+print "\n\toutput:"
+print "\t\t  p  : ", eos_vars[i_Ptot]
+print "\t\t  e  : ", numpy.exp(eos_vars[i_lnE])
+print "\t\t  s  : ", numpy.exp(eos_vars[i_lnS])
 
-# close EOS
-
+# close EOS/network
+if (test_network):
+    wrapper.shutdown_MESA_net() # network uses EOS, so its shutdown with net
+else:
+    wrapper.shutdown_MESA_eos()
 

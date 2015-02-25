@@ -10,7 +10,7 @@ cimport numpy
 # keyword in the fortran source)
 cdef extern:
     void initialize_MESA_eos()
-    void finalize_MESA_eos()
+#    void finalize_MESA_eos()
     void call_MESA_EOS(int *n_vars, double *xmass, int *eos_input, 
                        double *eos_vars, int *debug, int *eosfail)
 
@@ -63,7 +63,8 @@ def setup_MESA_eos():
 
 # finalize the EOS
 def shutdown_MESA_eos():
-    finalize_MESA_eos()
+#    finalize_MESA_eos()
+    pass
 
 # define the python "front end" to the external code
 def eos(int eos_input, numpy.ndarray[numpy.float64_t, ndim=1] xmass,

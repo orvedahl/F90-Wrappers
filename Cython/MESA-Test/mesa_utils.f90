@@ -6,6 +6,7 @@ module mesa_utils
 
    logical, save :: const_initialized = .false.
    logical, save :: chem_initialized = .false.
+   logical, save :: eos_initialized = .false.
 
    integer, save :: nspec
 

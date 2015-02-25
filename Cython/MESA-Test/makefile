@@ -5,6 +5,9 @@
 # Debugging flag
 debug :=
 
+# make cython stuff
+cython :=
+
 # which python
 python3 := 
 
@@ -44,22 +47,33 @@ flags += -L$(MESA_DIR)/lib -lnet -leos -lrates -lchem -linterp_2d -linterp_1d -l
 #flags += -L$(MESA_DIR)/lib -lnet -leos -lrates -lchem -linterp_2d -linterp_1d -lnum -lcrlibm -lmtx -lconst -lutils -lmesaklu -lmesalapack -lmesablas -I$(MESA_DIR)/include
 
 # order matters
-objects = data_types.f90 errors.f90 mesa_utils.f90 eos/eos_utils.f90 eos/setup_mesa_eos.f90 eos/shutdown_mesa_eos.f90 network/net_utils.f90 eos/MESA_EOS.f90 network/setup_mesa_net.f90 network/shutdown_mesa_net.f90 network/call_mesa_net.f90 wrapper.f90
+objects = data_types.f90 errors.f90 mesa_utils.f90 eos/eos_utils.f90 eos/setup_mesa_eos.f90 eos/shutdown_mesa_eos.f90 network/net_utils.f90 eos/MESA_EOS.f90 network/setup_mesa_net.f90 network/shutdown_mesa_net.f90 network/call_mesa_net.f90 wrapper.f90 fortran_driver.f90
 
-all: cython
+# strip the path from all the object files
+f90objects = $(notdir $(objects:.f90=.o))
 
-cython: $(objects:.f90=.o)
+ifdef cython
+all: xmain.exe cython_so
+else
+all: xmain.exe
+endif
+
+cython_so: $(objects:.f90=.o)
 	@echo
 	$(what_python) setup.py build_ext --inplace
 	@echo
 	@echo "---Success---"
 	@echo
 
+xmain.exe: $(objects:.f90=.o)
+	@echo
+	@echo "Linking $@ ..."
+	$(f90_comp) $(flags) -o $@ $(f90objects:.f90=.o)
+
 %.o: %.f90
 	@echo
 	@echo "Building $@ ..."
 	$(f90_comp) $(flags) -c $<
-#$(f90_comp) $(flags) -c $< -o $@
 
 clean:
 	-rm -f ./*.o ./*.mod
@@ -69,3 +83,5 @@ realclean: clean
 	-rm -f cython_wrapper.so
 	-rm -rf build
 
+# debugging tool
+print-%: ; @echo $* is $($*)

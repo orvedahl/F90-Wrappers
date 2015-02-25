@@ -7,7 +7,7 @@ subroutine setup_mesa_eos()
    ! MAESTRO
    use eos_utils, only: handle_eos, ih1_, ihe4_
    use mesa_utils,   only: network_species_index, mesa_dir,&
-                           const_initialized, chem_initialized
+                           const_initialized, chem_initialized, eos_initialized
    use errors, only: bl_error
 
    ! MESA
@@ -50,14 +50,16 @@ subroutine setup_mesa_eos()
 
    eos_file_prefix = 'mesa'
 
-   call eos_init(eos_file_prefix, '', '', '', use_cache, ierr)
-   if (ierr /= 0) then
-      call bl_error("ERROR: eos_init failed in set_eos_tables")
-   endif
+   if (.not. eos_initialized) then
+      call eos_init(eos_file_prefix, '', '', '', use_cache, ierr)
+      if (ierr /= 0) then
+         call bl_error("ERROR: eos_init failed in set_eos_tables")
+      endif
 
-   handle_eos = alloc_eos_handle(ierr)
-   if (ierr /= 0) then
-      call bl_error("ERROR: failed to allocate eos handle")
+      handle_eos = alloc_eos_handle(ierr)
+      if (ierr /= 0) then
+         call bl_error("ERROR: failed to allocate eos handle")
+      endif
    endif
 
    ! for metalicity

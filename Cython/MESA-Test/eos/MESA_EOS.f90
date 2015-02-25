@@ -1,7 +1,28 @@
-!
+!====================================================================
 ! routine to call MESA eos
-!
+!====================================================================
+subroutine Radiation_Pressure(T, Prad)
 
+   use data_types
+
+   implicit none
+
+   real(kind=dp_t), intent(in) :: T
+   real(kind=dp_t), intent(out) :: Prad
+   real(kind=dp_t) :: crad
+
+   ! radiation constant (cgs)
+   crad = 4.*(5.670400d-5)/2.99792458d10   ! crad = 4. * k / c, erg/cm^3/K^4
+
+   Prad = crad*T*T*T*T/3.d0
+
+   return
+   
+end subroutine Radiation_Pressure
+
+!====================================================================
+! routine to call MESA eos
+!====================================================================
 subroutine MESA_EOS(n_vars, xmass, eos_input, eos_vars, debug, eosfail)
 
    use data_types
@@ -27,7 +48,7 @@ subroutine MESA_EOS(n_vars, xmass, eos_input, eos_vars, debug, eosfail)
    ! LOCAL
    integer :: ierr
    real(kind=dp_t) :: xh, xhe, abar, zbar, z2bar, ye, mass_correction, sumx
-   real(kind=dp_t) :: rho, T, Z
+   real(kind=dp_t) :: rho, T, Z, Prad
    real(kind=dp_t), dimension(num_eos_basic_results) :: results, &
                              d_dlnRho_const_T, d_dlnT_const_Rho, &
                              d_dabar_const_TRho, d_dzbar_const_TRho
@@ -53,6 +74,9 @@ subroutine MESA_EOS(n_vars, xmass, eos_input, eos_vars, debug, eosfail)
                      net_iso, xmass, rho, log10(rho), T, log10(T), &
                      results, d_dlnRho_const_T, d_dlnT_const_Rho, &
                      d_dabar_const_TRho, d_dzbar_const_TRho, ierr)
+
+      call Radiation_Pressure(T, Prad)
+      eos_vars(i_Ptot) = Prad + exp(eos_vars(i_lnPgas))
 
    !-----------------------------------------------------------------
    ! inputs are total pressure & temperature
@@ -93,5 +117,4 @@ subroutine MESA_EOS(n_vars, xmass, eos_input, eos_vars, debug, eosfail)
    eos_vars(:) = results(:)
 
 end subroutine MESA_EOS
-
 

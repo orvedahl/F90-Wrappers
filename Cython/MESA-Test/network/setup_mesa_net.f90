@@ -8,7 +8,7 @@ subroutine setup_mesa_net()
    use net_utils,   only: net_iso, chem_id, which_rates, handle_net, &
                       num_reactions, solver_choice, decsol_choice, species
    use mesa_utils,  only: nspec, mesa_dir, short_spec_names, short_spec_mesa, &
-                     chem_initialized, const_initialized
+                     chem_initialized, const_initialized, eos_initialized
 
    ! MESA:
    use const_lib,   only: const_init
@@ -226,7 +226,9 @@ subroutine setup_mesa_net()
       call bl_error("unknown which_solver, "//trim(which_solver))
    endif
 
-   call setup_mesa_eos()
+   if (.not. eos_initialized) then
+      call setup_mesa_eos()
+   endif
 
 
    contains

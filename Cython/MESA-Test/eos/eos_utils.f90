@@ -47,6 +47,6 @@ module eos_utils
    integer, save :: i_Ptot     = 19  ! total pressure = rad pres + gas pres
    integer, save :: i_Prad     = 20  ! radiation pressure
 
-   integer, save :: num_eos_values = 20 ! total number of eos variables
+   integer, parameter :: num_eos_values = 20 ! total number of eos values
 
 end module eos_utils

@@ -29,9 +29,9 @@ pyx_name = "cython_wrapper"
 # order of libraries follows from MAESTRO build system of MESA EOS
 #libraries = ['net', 'eos', 'rates', 'chem', 'interp_2d',
 libraries = ['gfortran', 'net', 'eos', 'rates', 'chem', 'interp_2d',
-             'interp_1d', 'num', 'crlibm', 'mtx', 'const', 'utils',
-             'mesalapack', 'mesablas']
-             #'mesaklu', 'mesalapack', 'mesablas']
+             'interp_1d', 'num', 'f2crlibm', 'crlibm', 'mtx', 'const',
+             'utils', 'mesalapack', 'mesablas']
+             #'utils', 'mesaklu', 'mesalapack', 'mesablas']
 lib_dirs = [mesa_lib]
 include_dirs = [npy_include_dir, mesa_inc, python_inc]
 
