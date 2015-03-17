@@ -37,10 +37,12 @@ include_dirs = [npy_include_dir, mesa_inc, python_inc]
 
 # list the object files: wrapper.o holds the wrapping code which depends on
 # original.o code...note this is the filename, not the module name
-objects = ["data_types.o", "errors.o", "mesa_utils.o", "eos_utils.o",
-        "setup_mesa_eos.o", "shutdown_mesa_eos.o",
-        "net_utils.o", "MESA_EOS.o", "setup_mesa_net.o",
-        "shutdown_mesa_net.o", "call_mesa_net.o", "wrapper.o"]
+objects = ["t/gfortran/o/data_types.o", "t/gfortran/o/errors.o",
+        "t/gfortran/o/mesa_utils.o", "t/gfortran/o/eos_utils.o",
+        "t/gfortran/o/setup_mesa_eos.o", "t/gfortran/o/shutdown_mesa_eos.o",
+        "t/gfortran/o/net_utils.o", "t/gfortran/o/MESA_EOS.o",
+        "t/gfortran/o/setup_mesa_net.o", "t/gfortran/o/shutdown_mesa_net.o",
+        "t/gfortran/o/call_mesa_net.o", "t/gfortran/o/wrapper.o"]
 #objects = ["data_types.o", "errors.o", "mesa_utils.o", "eos/eos_utils.o",
 #        "eos/setup_mesa_eos.o", "eos/shutdown_mesa_eos.o",
 #        "network/net_utils.o", "eos/MESA_EOS.o", "network/setup_mesa_net.o",
